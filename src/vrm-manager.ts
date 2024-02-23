@@ -383,12 +383,10 @@ export class VRMManager {
         for (let index = this.transformNodesFrom; index < this.scene.transformNodes.length; index++) {
             const node = this.scene.transformNodes[index];
             // ポインタが登録されていないものは省略
-            if (!node || !node.metadata || !node.metadata.gltf || !node.metadata.gltf.pointers || node.metadata.gltf.pointers.length === 0) {
-                continue;
-            }
-            for (const pointer of node.metadata.gltf.pointers) {
+            const pointers = node?._internalMetadata?.gltf?.pointers || [];
+            for (const pointer of pointers) {
                 if (pointer.startsWith('/nodes/')) {
-                    const nodeIndex = parseInt((pointer as string).substr(7), 10);
+                    const nodeIndex = parseInt((pointer as string).substring(7), 10);
                     cache[nodeIndex] = node;
                     break;
                 }
@@ -409,10 +407,8 @@ export class VRMManager {
                 continue;
             }
             // ポインタが登録されていないものは省略
-            if (!mesh || !mesh.metadata || !mesh.metadata.gltf || !mesh.metadata.gltf.pointers || mesh.metadata.gltf.pointers.length === 0) {
-                continue;
-            }
-            for (const pointer of mesh.metadata.gltf.pointers) {
+            const pointers = mesh?._internalMetadata?.gltf?.pointers || [];
+            for (const pointer of pointers) {
                 const match = (pointer as string).match(/^\/meshes\/(\d+).+$/);
                 if (match) {
                     const nodeIndex = parseInt(match[1], 10);
