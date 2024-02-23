@@ -23,7 +23,7 @@
     "typings": "dist/index.d.ts",
     "main": "dist/index.module.js",
     "dependencies": {
-        "babylon-mtoon-material": "^5.0.0"
+        "babylon-mtoon-material": "^5.1.1"
     },
     "devDependencies": {
         "@babylonjs/core": "^6.43.0",
@@ -99,7 +99,7 @@
         ]
     },
     "peerDependencies": {
-        "@babylonjs/core": "^5.19.0",
-        "@babylonjs/loaders": "^5.19.0"
+        "@babylonjs/core": "^6.43.0",
+        "@babylonjs/loaders": "^6.43.0"
     }
 }
