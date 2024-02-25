@@ -5,11 +5,20 @@ import type { IGLTFLoaderExtension, IMaterial, IMeshPrimitive } from '@babylonjs
 import { GLTFLoader } from '@babylonjs/loaders/glTF/2.0';
 import { VRMManager } from './vrm-manager';
 import { VRMMaterialGenerator } from './vrm-material-generator';
+import { IVRM1SpringBone, IVRMSecondaryAnimation } from './vrm-interfaces';
 
 /**
  * `extensions` に入る拡張キー
  */
 const NAME = 'VRM';
+/**
+ * `extensions` vrm1.0 key
+ */
+const NAME1 = 'VRMC_vrm';
+/**
+ * `extensions` spring bone key
+ */
+const SPRINGBONENAME1 = 'VRMC_springBone';
 
 /**
  * VRM 拡張を処理する
@@ -59,19 +68,67 @@ export class VRM implements IGLTFLoaderExtension {
      * @inheritdoc
      */
     public onReady() {
-        if (!this.loader.gltf.extensions || !this.loader.gltf.extensions[NAME]) {
+        const vrm0ext = this.loader.gltf?.extensions?.[NAME];
+        const vrm1ext = this.loader.gltf?.extensions?.[NAME1];
+        if (!vrm0ext && !vrm1ext) {
             return;
         }
+
         const scene = this.loader.babylonScene;
-        const manager = new VRMManager(this.loader.gltf.extensions[NAME], this.loader.babylonScene, this.meshesFrom, this.transformNodesFrom, this.materialsFrom);
         scene.metadata = scene.metadata || {};
         scene.metadata.vrmManagers = scene.metadata.vrmManagers || [];
-        scene.metadata.vrmManagers.push(manager);
-        this.loader.babylonScene.onDisposeObservable.add(() => {
-            // Scene dispose 時に Manager も破棄する
-            manager.dispose();
-            this.loader.babylonScene.metadata.vrmManagers = [];
-        });
+        if (vrm1ext) { // for vrm1.0
+            const springBone1 = this.loader.gltf?.extensions?.[SPRINGBONENAME1];
+            vrm1ext.secondaryAnimation = this.fallbackSpringBone(springBone1);
+
+            const manager = new VRMManager(vrm1ext, this.loader.babylonScene, this.meshesFrom, this.transformNodesFrom, this.materialsFrom);
+            scene.metadata.vrmManagers.push(manager);
+            this.loader.babylonScene.onDisposeObservable.add(() => {
+                // Scene dispose 時に Manager も破棄する
+                manager.dispose();
+                this.loader.babylonScene.metadata.vrmManagers = [];
+            });
+            return;
+        }
+
+        { // for vrm0.0
+            const manager = new VRMManager(vrm0ext, this.loader.babylonScene, this.meshesFrom, this.transformNodesFrom, this.materialsFrom);
+            scene.metadata.vrmManagers.push(manager);
+            this.loader.babylonScene.onDisposeObservable.add(() => {
+                // Scene dispose 時に Manager も破棄する
+                manager.dispose();
+                this.loader.babylonScene.metadata.vrmManagers = [];
+            });
+        }
+    }
+
+/**
+ * @since patch2
+ * @param springBone1
+ */
+    private fallbackSpringBone(springBone1?: IVRM1SpringBone) {
+        const secondaryAnimation0: IVRMSecondaryAnimation = {
+            boneGroups: [],
+            colliderGroups: [],
+        };
+
+        /*
+        if (!springBone1) {
+            return secondaryAnimation0;
+        }
+
+        for (const group1 of springBone1.colliderGroups) {
+            for (const index1 of group1.colliders) {
+                const collider1 = springBone1.colliders[index1];
+                const group0: IVRMSecondaryAnimationColliderGroup = {
+                    node: collider1.node,
+                    colliders: []
+                };
+                secondaryAnimation0.colliderGroups.push(group0);
+            }
+        }
+*/
+        return secondaryAnimation0;
     }
 
     /**

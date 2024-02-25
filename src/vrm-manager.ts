@@ -6,7 +6,7 @@ import type { Scene } from '@babylonjs/core/scene';
 import type { Nullable } from '@babylonjs/core/types';
 import { SpringBoneController } from './secondary-animation/spring-bone-controller';
 import { HumanoidBone } from './humanoid-bone';
-import type { IVRM } from './vrm-interfaces';
+import type { IVRM, IVRM1Expressions, IVRMBlendShapeMaster, IVRMBlendShapeGroup, IVRMBlendShapeBind } from './vrm-interfaces';
 import { MaterialValueBindingMerger } from './material-value-binding-merger';
 
 interface IsBinaryMap {
@@ -135,7 +135,12 @@ export class VRMManager {
     ) {
         this.meshCache = this.constructMeshCache();
         this.transformNodeCache = this.constructTransformNodeCache();
+
         this.springBoneController = new SpringBoneController(this.ext.secondaryAnimation, this.findTransformNode.bind(this));
+
+        if (this.ext.expressions) {
+            this.ext.blendShapeMaster = this.convertExpressions(this.ext.expressions);
+        }
 
         if (this.ext.blendShapeMaster && this.ext.blendShapeMaster.blendShapeGroups) {
             this.constructIsBinaryMap();
@@ -145,6 +150,77 @@ export class VRMManager {
         this.constructTransformNodeMap();
 
         this._humanoidBone = new HumanoidBone(this.transformNodeMap);
+    }
+
+/**
+ * https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/expressions.md
+ * @since patch2
+ * @param expressions
+ */
+    private convertExpressions(expressions: IVRM1Expressions): IVRMBlendShapeMaster {
+        const map1toPreset0: { [key: string]: string } = {
+            "happy": "Joy",
+            "angry": "Angry",
+            "sad": "Sorrow",
+            "relaxed": "Fun",
+            "aa": "A",
+            "ih": "I",
+            "ou": "U",
+            "ee": "E",
+            "oh": "O",
+            "blink": "Blink",
+            "blinkLeft": "Blink_L",
+            "blinkRight": "Blink_R",
+            "lookUp": "LookUp",
+            "lookDown": "LookDown",
+            "lookLeft": "LookLeft",
+            "lookRight": "LookRight",
+            "neutral": "Neutral",
+        };
+
+        const blendShapeGroups = [];
+        for (const key in expressions.preset) {
+            const expression = expressions.preset[key];
+            const group: IVRMBlendShapeGroup = {
+                name: key,
+                presetName: 'unknown',
+                binds: [],
+                materialValues: [],
+                isBinary: expression.isBinary,
+            };
+            group.presetName = map1toPreset0[group.name] || 'unknown';
+            for (const bind1 of expression.morphTargetBinds) {
+                const node = this.findTransformNode(bind1.node);
+                const bind0: IVRMBlendShapeBind = {
+                    mesh: node?._internalMetadata?.gltf?.mesh ?? 0,
+                    index: bind1.index,
+                    weight: bind1.weight * 100,
+                };
+                group.binds.push(bind0);
+            }
+            blendShapeGroups.push(group);
+        }
+        for (const key in expressions.custom) {
+            const expression = expressions.custom[key];
+            const group: IVRMBlendShapeGroup = {
+                name: key,
+                presetName: 'unknown',
+                binds: [],
+                materialValues: [],
+                isBinary: expression.isBinary,
+            };
+            for (const bind1 of expression.morphTargetBinds) {
+                const node = this.findTransformNode(bind1.node);
+                const bind0: IVRMBlendShapeBind = {
+                    mesh: node?._internalMetadata?.gltf?.mesh ?? 0,
+                    index: bind1.index,
+                    weight: bind1.weight * 100,
+                };
+                group.binds.push(bind0);
+            }
+            blendShapeGroups.push(group);
+        }
+        return { blendShapeGroups };
     }
 
     /**
@@ -306,7 +382,7 @@ export class VRMManager {
      * 事前に MorphTarget と isBinary を紐付ける
      */
     private constructIsBinaryMap(): void {
-        this.ext.blendShapeMaster.blendShapeGroups.forEach((g) => {
+        this.ext.blendShapeMaster?.blendShapeGroups.forEach((g) => {
             this.isBinaryMorphMap[g.name] = g.isBinary;
         });
     }
@@ -315,7 +391,7 @@ export class VRMManager {
      * 事前に MorphTarget と BlendShape を紐付ける
      */
     private constructMorphTargetMap(): void {
-        this.ext.blendShapeMaster.blendShapeGroups.forEach((g) => {
+        this.ext.blendShapeMaster?.blendShapeGroups.forEach((g) => {
             if (!g.binds) {
                 return;
             }
@@ -354,7 +430,7 @@ export class VRMManager {
      */
     private constructMaterialValueBindingMergerMap() {
         const materials = this.scene.materials.slice(this.materialsNodesFrom);
-        this.ext.blendShapeMaster.blendShapeGroups.forEach((g) => {
+        this.ext.blendShapeMaster?.blendShapeGroups.forEach((g) => {
             if (!g.materialValues) {
                 return;
             }
@@ -366,13 +442,27 @@ export class VRMManager {
      * 事前に TransformNode と bone 名を紐づける
      */
     private constructTransformNodeMap() {
-        this.ext.humanoid.humanBones.forEach((b) => {
+        const humanBones = this.ext.humanoid.humanBones || {};
+        if (Array.isArray(humanBones)) { // for vrm0.0
+            humanBones.forEach((b) => {
+                const node = this.findTransformNode(b.node);
+                if (!node) {
+                    return;
+                }
+                this.transformNodeMap[b.bone] = node;
+            });
+            return;
+        }
+        // for vrm1.0
+        for (const key in humanBones) {
+            const b = humanBones[key];
+            b.bone = key;
             const node = this.findTransformNode(b.node);
             if (!node) {
                 return;
             }
             this.transformNodeMap[b.bone] = node;
-        });
+        }
     }
 
     /**
