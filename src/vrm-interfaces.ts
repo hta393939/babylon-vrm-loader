@@ -258,10 +258,25 @@ export interface IVRM1ColliderGroup {
  */
 export interface IVRM1Joint {
     node: number;
+/**
+ * @default 0
+ */
     hitRadius?: number;
+/**
+ * @default 1
+ */
     stiffness?: number;
+/**
+ * @default 0
+ */
     gravityPower?: number;
-    gravityDir?: number[];
+/**
+ * @default [0, -1, 0]
+ */
+    gravityDir?: [number, number, number];
+/**
+ * @default 0.5
+ */
     dragForce?: number;
 }
 
@@ -271,7 +286,7 @@ export interface IVRM1Joint {
  */
 export interface IVRM1Spring {
     name: string;
-    joints: { node: number }[];
+    joints: IVRM1Joint[];
     colliderGroups: number[];
 /**
  * index of node
