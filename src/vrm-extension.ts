@@ -132,7 +132,7 @@ export class VRM implements IGLTFLoaderExtension {
                         y: body.offset[1],
                         z: body.offset[2],
                     },
-                    radius: 0,
+                    radius: body.radius,
                 };
                 group0.colliders.push(collider0);
             }
@@ -150,7 +150,6 @@ export class VRM implements IGLTFLoaderExtension {
                     y: -1,
                     z: 0,
                 },
-                center: 0,
                 stiffiness: 1,
                 bones: [],
                 colliderGroups: []
@@ -171,7 +170,16 @@ export class VRM implements IGLTFLoaderExtension {
                     spring0.bones.push(joint.node);
                 }
             }
-            spring0.colliderGroups.splice(0); // not supported
+
+            const collider = new Set<number>();
+            for (const index of (spring1.colliderGroups || [])) {
+                const colliderGroup = springBone1.colliderGroups?.[index] || [];
+                for (const colliderIndex of (colliderGroup.colliders || [])) {
+                    collider.add(colliderIndex);
+                }
+            }
+            spring0.colliderGroups = Array.from(collider);
+
             secondaryAnimation0.boneGroups.push(spring0);
         }
 

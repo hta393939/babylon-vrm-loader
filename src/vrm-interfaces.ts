@@ -183,7 +183,10 @@ export interface IVRMSecondaryAnimationSpring {
     gravityPower: number;
     gravityDir: IVRMVector3;
     dragForce: number;
-    center: number;
+/**
+ * patch2 optional
+ */
+    center?: number;
     hitRadius: number;
     bones: number[];
     colliderGroups: number[];

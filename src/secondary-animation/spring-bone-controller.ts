@@ -58,9 +58,9 @@ export class SpringBoneController {
             const bone = getBone(colliderGroup.node) as TransformNode;
             const g = new ColliderGroup(bone);
             colliderGroup.colliders.forEach((collider) => {
+                const position = new Vector3(collider.offset.x, collider.offset.y, collider.offset.z);
                 g.addCollider(
-                    // VRM 右手系Y_UP, -Z_Front から Babylon.js 左手系Y_UP, +Z_Front にする
-                    new Vector3(-collider.offset.x, collider.offset.y, -collider.offset.z),
+                    position,
                     collider.radius
                 );
             });
@@ -74,26 +74,36 @@ export class SpringBoneController {
             return [];
         }
         const springs: VRMSpringBone[] = [];
+        let useRightHandedSystem = false;
         this.ext.boneGroups.forEach((spring) => {
             const rootBones = (spring.bones || []).map((bone) => {
-                return getBone(bone) as TransformNode;
+                const node = getBone(bone) as TransformNode;
+                if (node) {
+                    useRightHandedSystem = node.getScene().useRightHandedSystem;
+                }
+                return node;
             });
             const springColliders = (spring.colliderGroups || []).map<ColliderGroup>((g) => {
                 return colliderGroups[g];
             });
+            // VRM 右手系Y_UP, -Z_Front から Babylon.js 左手系Y_UP, +Z_Front にする
+            const dir = useRightHandedSystem ? new Vector3(
+                spring.gravityDir.x,
+                spring.gravityDir.y,
+                spring.gravityDir.z
+            ) : new Vector3(
+                -spring.gravityDir.x,
+                 spring.gravityDir.y,
+                -spring.gravityDir.z
+            );
             springs.push(
                 new VRMSpringBone(
                     spring.comment,
                     spring.stiffiness,
                     spring.gravityPower,
-                    new Vector3(
-                        // VRM 右手系Y_UP, -Z_Front から Babylon.js 左手系Y_UP, +Z_Front にする
-                        -spring.gravityDir.x,
-                        spring.gravityDir.y,
-                        -spring.gravityDir.z
-                    ).normalize(),
+                    dir.normalize(),
                     spring.dragForce,
-                    getBone(spring.center),
+                    getBone(spring.center ?? -1),
                     spring.hitRadius,
                     rootBones,
                     springColliders

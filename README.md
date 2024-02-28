@@ -8,6 +8,22 @@ VRM porting to babylon.js.
 
 This loader is used as [VirtualCast](https://virtualcast.jp/) web VRM/VCI/glb viewer.
 
+## Fork description
+
+(en): This fork purpose is vrm0.0 features for bump babylonjs 6.43.0.
+Check by commonjs only, use dist/index.js
+**vrm1.0 not supported**, exist few fallbacks.
+- vrm1.0 material not supported, fallback default vrm0.0.
+- Capsule collider fallback to sphere collider, ignored tail.
+
+(ja): vrm0.0 babylonjs 6.43.0 への対応が主な目的です。
+dist/index.js を使用した JavaScript commonjs での動作のみ確認しています。
+**vrm1.0 には非対応です。** 部分的にフォールバックがあるだけです。
+- vrm1.0 material には非対応です。vrm0.0 のデフォルトパラメータで動作します。
+- カプセルコライダーは球スライダーにフォールバックされます。
+tail プロパティは無視されます。
+
+
 ## Supported version table
 
 |babylon.js version|babylon-vrm-loader version|

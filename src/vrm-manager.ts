@@ -139,7 +139,7 @@ export class VRMManager {
         this.springBoneController = new SpringBoneController(this.ext.secondaryAnimation, this.findTransformNode.bind(this));
 
         if (this.ext.expressions) {
-            this.ext.blendShapeMaster = this.convertExpressions(this.ext.expressions);
+            this.ext.blendShapeMaster = this.fallbackExpressions(this.ext.expressions);
         }
 
         if (this.ext.blendShapeMaster && this.ext.blendShapeMaster.blendShapeGroups) {
@@ -157,7 +157,7 @@ export class VRMManager {
  * @since patch2
  * @param expressions
  */
-    private convertExpressions(expressions: IVRM1Expressions): IVRMBlendShapeMaster {
+    private fallbackExpressions(expressions: IVRM1Expressions): IVRMBlendShapeMaster {
         const map1toPreset0: { [key: string]: string } = {
             "happy": "Joy",
             "angry": "Angry",

@@ -67,7 +67,7 @@ export class VRMSpringBone {
                     scene
                 );
                 const mat = new StandardMaterial(b.name + '_boneGizmomat', scene);
-                mat.emissiveColor = Color3.Red();
+                mat.emissiveColor = ((this.colliderGroups || []).length >= 1) ? Color3.Red() : Color3.Blue();
                 mat.wireframe = true;
                 boneGizmo.material = mat;
                 boneGizmo.setParent(b);
