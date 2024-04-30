@@ -10,7 +10,7 @@ This loader is used as [VirtualCast](https://virtualcast.jp/) web VRM/VCI/glb vi
 
 ## Fork description
 
-(en): This fork purpose is vrm0.0 features for bump babylonjs 6.43.0.
+(en): This fork purpose is vrm0.0 features for bump babylonjs 7.4.0.
 Check by commonjs only, use dist/index.js
 demo page
 https://hta393939.github.io/test/babylon-vrm-loader/
