@@ -26,18 +26,18 @@
         "babylon-mtoon-material": "^5.7.0"
     },
     "devDependencies": {
-        "@babylonjs/core": "^7.4.0",
-        "@babylonjs/gui": "^7.4.0",
-        "@babylonjs/gui-editor": "^7.4.0",
-        "@babylonjs/inspector": "^7.4.0",
-        "@babylonjs/loaders": "^7.4.0",
-        "@babylonjs/materials": "^7.4.0",
-        "@babylonjs/serializers": "^7.4.0",
+        "@babylonjs/core": "^8.2.0",
+        "@babylonjs/gui": "^8.2.0",
+        "@babylonjs/gui-editor": "^8.2.0",
+        "@babylonjs/inspector": "^8.2.0",
+        "@babylonjs/loaders": "^8.2.0",
+        "@babylonjs/materials": "^8.2.0",
+        "@babylonjs/serializers": "^8.2.0",
         "@semantic-release/git": "^10.0.1",
         "@types/node": "^15.12.2",
         "@typescript-eslint/eslint-plugin": "~5.16.0",
         "@typescript-eslint/parser": "~5.16.0",
-        "babylonjs-gltf2interface": "^7.4.0",
+        "babylonjs-gltf2interface": "^8.2.0",
         "cz-conventional-changelog": "3.3.0",
         "eslint": "^8.11.0",
         "eslint-config-prettier": "~8.5.0",
@@ -99,7 +99,7 @@
         ]
     },
     "peerDependencies": {
-        "@babylonjs/core": "^7.4.0",
-        "@babylonjs/loaders": "^7.4.0"
+        "@babylonjs/core": "^8.2.0",
+        "@babylonjs/loaders": "^8.2.0"
     }
 }
