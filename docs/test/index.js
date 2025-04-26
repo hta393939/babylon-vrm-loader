@@ -15,23 +15,26 @@ class SceneCreator {
 	async createScene(engine) {
 		const scene = new BABYLON.Scene(engine);
 		//scene.useRightHandedSystem = true;
+		this.scene = scene;
 
 		await scene.debugLayer.show({
 			globalRoot: document.getElementById('wrapper'),
 		});
 
+		let y = 0;
 		const camera = new BABYLON.ArcRotateCamera('camera1',
 			0, 0, 3,
-			new BABYLON.Vector3(0, 1.2, 0),
+			new BABYLON.Vector3(0, y, 0),
 			scene);
 		camera.wheelDeltaPercentage = 0.01;
 		camera.minZ = 0.3;
-		camera.setPosition(new BABYLON.Vector3(0, 1.2, 3));
+		camera.setPosition(new BABYLON.Vector3(0, y, -3));
 		camera.attachControl();
+		this.camera = camera;
 
 		new BABYLON.HemisphericLight(
 			'light1',
-			new BABYLON.Vector3(-0.2, -0.8, -1),
+			new BABYLON.Vector3(1, 1, -1),
 			scene
 		);
 
@@ -45,8 +48,6 @@ class SceneCreator {
 
 		const folder = './';
 		const name = 'AliciaSolid.vrm';
-		//const name = 'mobshiro.vrm';
-		//const name = 'mob10.vrm';
 		await BABYLON.SceneLoader.AppendAsync(folder, name, scene);
 		console.log('LoadAsync success');
 
@@ -76,7 +77,7 @@ class SceneCreator {
 				}
 
 				manager.humanoidBone.hips.position.set(Math.sin(ang) * 0.25, 0, 0);
-// expression
+				// expression
 				manager.morphing('Joy', (Math.sin(ang) + 1) * 0.5);
 				manager.morphing('happy', (Math.sin(ang) + 1) * 0.5);
 
