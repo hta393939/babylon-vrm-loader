@@ -6,6 +6,7 @@ import { GLTFLoader } from '@babylonjs/loaders/glTF/2.0';
 import { VRMManager } from './vrm-manager';
 import { VRMMaterialGenerator } from './vrm-material-generator';
 import type { IVRM1SpringBone, IVRMSecondaryAnimation, IVRMSecondaryAnimationColliderGroup, IVRMSecondaryAnimationSpring } from './vrm-interfaces';
+import { RegisterGLTFExtension } from '@babylonjs/loaders/glTF/2.0';
 
 /**
  * `extensions` に入る拡張キー
@@ -209,4 +210,8 @@ export class VRM implements IGLTFLoaderExtension {
 }
 
 // ローダーに登録する
-GLTFLoader.RegisterExtension(NAME, (loader) => new VRM(loader));
+RegisterGLTFExtension(
+    NAME,
+    false,
+    (loader) => new VRM(loader)
+);

@@ -4,6 +4,7 @@ import type { Nullable } from '@babylonjs/core/types';
 import type { IGLTFLoaderExtension, IMaterial } from '@babylonjs/loaders/glTF/2.0';
 import { GLTFLoader } from '@babylonjs/loaders/glTF/2.0';
 import { VRMMaterialGenerator } from './vrm-material-generator';
+import { RegisterGLTFExtension } from '@babylonjs/loaders/glTF/2.0';
 
 /**
  * `extensions` に入る拡張キー
@@ -45,4 +46,7 @@ export class VCAST_vci_material_unity implements IGLTFLoaderExtension {
 }
 
 // ローダーに登録する
-GLTFLoader.RegisterExtension(NAME, (loader) => new VCAST_vci_material_unity(loader));
+RegisterGLTFExtension(NAME,
+    false,
+    (loader) => new VCAST_vci_material_unity(loader)
+);
