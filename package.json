@@ -23,21 +23,21 @@
     "typings": "dist/index.d.ts",
     "main": "dist/index.module.js",
     "dependencies": {
-        "babylon-mtoon-material": "^5.7.0"
+        "babylon-mtoon-material": "^5.1.1"
     },
     "devDependencies": {
-        "@babylonjs/core": "^8.2.0",
-        "@babylonjs/gui": "^8.2.0",
-        "@babylonjs/gui-editor": "^8.2.0",
-        "@babylonjs/inspector": "^8.2.0",
-        "@babylonjs/loaders": "^8.2.0",
-        "@babylonjs/materials": "^8.2.0",
-        "@babylonjs/serializers": "^8.2.0",
+        "@babylonjs/core": "^8.7.1",
+        "@babylonjs/gui": "^8.7.1",
+        "@babylonjs/gui-editor": "^8.7.1",
+        "@babylonjs/inspector": "^8.7.1",
+        "@babylonjs/loaders": "^8.7.1",
+        "@babylonjs/materials": "^8.7.1",
+        "@babylonjs/serializers": "^8.7.1",
         "@semantic-release/git": "^10.0.1",
         "@types/node": "^15.12.2",
         "@typescript-eslint/eslint-plugin": "~5.16.0",
         "@typescript-eslint/parser": "~5.16.0",
-        "babylonjs-gltf2interface": "^8.2.0",
+        "babylonjs-gltf2interface": "^8.7.1",
         "cz-conventional-changelog": "3.3.0",
         "eslint": "^8.11.0",
         "eslint-config-prettier": "~8.5.0",
@@ -99,7 +99,7 @@
         ]
     },
     "peerDependencies": {
-        "@babylonjs/core": "^8.2.0",
-        "@babylonjs/loaders": "^8.2.0"
+        "@babylonjs/core": "^8.7.1",
+        "@babylonjs/loaders": "^8.7.1"
     }
 }
