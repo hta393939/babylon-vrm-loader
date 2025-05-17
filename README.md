@@ -15,8 +15,9 @@ Check by commonjs only, use dist/index.js
 
 demo page
 
+for babylonjs v8.8.5   
 https://hta393939.github.io/babylon-vrm-loader/test/   
-or    
+or for babylonjs v7.4.0    
 https://hta393939.github.io/babylon-vrm-loader/test3/   
 
 **vrm1.0 not supported**, exist few fallbacks.
@@ -28,16 +29,15 @@ dist/index.js を使用した JavaScript commonjs での動作のみ確認して
 
 デモページ
 
+for babylonjs v8.8.5   
 https://hta393939.github.io/babylon-vrm-loader/test/   
-or   
+or for babylonjs v7.4.0   
 https://hta393939.github.io/babylon-vrm-loader/test3/
 
 **vrm1.0 には非対応です。** 部分的にフォールバックがあるだけです。
 - vrm1.0 material には非対応です。vrm0.0 のデフォルトパラメータで動作します。
 - カプセルコライダーは球スライダーにフォールバックされます。
 tail プロパティは無視されます。
-
-
 
 
 
