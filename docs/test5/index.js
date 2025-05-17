@@ -14,7 +14,7 @@ class SceneCreator {
 
 	async createScene(engine) {
 		const scene = new BABYLON.Scene(engine);
-		//scene.useRightHandedSystem = true;
+		scene.useRightHandedSystem = true;
 		this.scene = scene;
 
 		await scene.debugLayer.show({
